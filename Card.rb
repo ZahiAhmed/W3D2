@@ -12,8 +12,8 @@ class Card
         @face_up = true
     end
 
-    def reveal?
-        @face_up == true
+    def face_up
+        @face_up
     end
 
     def to_s

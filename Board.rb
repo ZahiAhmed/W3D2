@@ -23,11 +23,11 @@ class Board
     end
 
     def reveal(pos)
-        if !@grid[pos].reveal?
+        if !@grid[pos].face_up
             @grid[pos].reveal
             return @grid[pos].value
         end
-    en
+    end
 
     def won?
         @grid.all? {|row| row.all?{|card| card.reveal?}}
