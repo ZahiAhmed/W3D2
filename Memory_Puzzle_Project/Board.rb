@@ -1,7 +1,8 @@
 class Board
-    def initialize(size)
+    def initialize(size )
         @grid = Array.new(size) {Array.new(size, Card.new)}
         @size = size
+        populate
     end
 
     def [](pos)
@@ -15,8 +16,20 @@ class Board
     end
 
     def populate
-        rand
+        num_pairs = (self.size ** 2) / 2
+        cards = Card.shuffled_pairs(num_pairs)
+
+        @grid.each_with_index do |row, row_index|
+            row.each_with_index do |spot, col_idx|
+                pos = [row_idx, col_idx]
+                self[pos] = cards.pop
+            end
+        end
     end
+
+    
+
+
 
     def render
         @grid.each {|row| puts row.join(" ")}
