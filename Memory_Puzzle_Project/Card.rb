@@ -14,28 +14,33 @@ class Card
         cards.shuffle!
     end
 
-    def initialize(value, face_up=false)
+    attr_reader :value
+    
+    def initialize(value)
         @value = value
-        @face_up = face_up
+        @face_up = false
     end
 
-    def hide
-        @face_up = false 
-    end
-
-    def reveal
-        @face_up = true
-    end
-
-    def face_up
+    def face_up?
         @face_up
     end
 
     def to_s
-        @value.to_s
+        @value = "#{@value}"
     end
 
-    def ==
-        
+    def flip
+        if @face_up == false
+            @face_up = true
+        else
+            @face_up = false
+        end
+    end
+
+    def display
+        if self.face_up?
+            return @value.to_s.ljust(2)
+        end
+        "[]"
     end
 end

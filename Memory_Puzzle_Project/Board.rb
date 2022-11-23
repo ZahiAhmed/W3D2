@@ -1,18 +1,23 @@
+require_relative "card.rb"
+require "byebug"
 class Board
-    def initialize(size )
-        @grid = Array.new(size) {Array.new(size, Card.new)}
+    
+    attr_reader :size, :grid
+    
+    def initialize(size)
+        @grid = Array.new(size) {Array.new(size)}
         @size = size
         populate
     end
 
-    def [](pos)
-        row , col = pos
-        @grid[pos] 
+    def [](position)
+        row , column = position
+        @grid[row][column] 
     end
 
-    def []=(pos, value)
-        row , col = pos
-        @grid[pos] = value
+    def []=(position, value)
+        row , column = position
+        @grid[row][column] = value
     end
 
     def populate
@@ -20,29 +25,34 @@ class Board
         cards = Card.shuffled_pairs(num_pairs)
 
         @grid.each_with_index do |row, row_index|
-            row.each_with_index do |spot, col_idx|
-                pos = [row_idx, col_idx]
+            row.each_with_index do |spot, col_index|
+                pos = [row_index, col_index]
                 self[pos] = cards.pop
             end
         end
     end
 
-    
-
-
-
     def render
-        @grid.each {|row| puts row.join(" ")}
+        system("clear")
+        @grid.each {|row| puts row.map {|card| card.display}.join(" ")}
     end
 
-    def reveal(pos)
-        if !@grid[pos].face_up
-            @grid[pos].reveal
-            return @grid[pos].value
+    def reveal(position)
+        if !self[position].face_up?
+            self[position].flip
         end
+        self.render
     end
 
     def won?
-        @grid.all? {|row| row.all?{|card| card.reveal?}}
+        @grid.all? {|row| row.all?{|card| card.face_up?}}
     end 
+
+    def valid_position?(position)
+        row, column = position
+        return false if position.length != 2
+        return false if 0 > row || row >= @grid.length
+        return false if 0 > column || column >= @grid.length
+        true
+    end
 end
